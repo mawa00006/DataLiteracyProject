@@ -85,7 +85,11 @@ def read_and_preprocess(file_name):
     data['Radio Therapy'] = (data['Radio Therapy'] == 'YES').astype(int)
     data['ER Status'] = (data['ER Status'] == 'Positive').astype(int)
 
-    return data
+    # only use the first dataset MB
+    filtered_df = data[~data['Patient ID'].str.startswith('MTS')]
+    #print(filtered_df.shape)
+
+    return filtered_df
 
 if __name__ == "__main__":
     file_name = "/Users/friederikemoroff/Documents/university/bioinformatic/data_literacy/breast_cancer/clinical_data.tsv"
