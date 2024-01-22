@@ -6,7 +6,7 @@ from data_reader import read_and_preprocess
 
 
 ### read the data ------------------------------
-file_name = "/Users/friederikemoroff/Documents/university/bioinformatic/data_literacy/breast_cancer/clinical_data.tsv"
+file_name = "../dat/brca_metabric_clinical_data.tsv"
 data = read_and_preprocess(file_name)
 
 

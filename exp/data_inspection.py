@@ -9,7 +9,7 @@ from scipy.stats import f_oneway
 from scipy.stats import ttest_ind
 
 ### read the data ------------------------------
-file_name = "/Users/friederikemoroff/Documents/university/bioinformatic/data_literacy/breast_cancer/clinical_data.tsv"
+file_name = "../dat/brca_metabric_clinical_data.tsv"
 data = read_and_preprocess(file_name)
 
 ### inspect the data ------------------------------
