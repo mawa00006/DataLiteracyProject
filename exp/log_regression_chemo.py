@@ -1,0 +1,123 @@
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels.stats.multitest import multipletests
+from matplotlib import pyplot as plt
+from data_reader import read_and_preprocess
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import (confusion_matrix, accuracy_score)
+from sklearn.metrics import f1_score
+
+# read the data --------------------------------------------------------------------------------------------
+file_name = "/Users/friederikemoroff/Documents/university/bioinformatic/data_literacy/breast_cancer/clinical_data.tsv"
+data = read_and_preprocess(file_name)
+
+
+# Chemotherapy ---------------------------------------------------------------------------------------------
+
+# preprocessing ---------------------------------------------------------------
+# exclude the NaNs
+data_chemo = data.dropna(subset=['Chemotherapy', 'Tumor Size', 'Tumor Stage',
+                                 'Neoplasm Histologic Grade', 'Lymph nodes examined positive',
+                                 'Mutation Count', 'Integrative Cluster'])
+print(data_chemo.shape)  # (1289, 33)
+
+# convert categorical to dummy numerical variable
+tumor_type_mapping = {'Breast Invasive Ductal Carcinoma': 0,
+                      'Breast Mixed Ductal and Lobular Carcinoma': 1,
+                      'Breast Invasive Lobular Carcinoma': 2,
+                      'Invasive Breast Carcinoma': 3}
+cluster_mapping = {'1': 0, '2': 1, '3': 2, '4ER+': 3, '4ER-': 4, '5': 5,
+                   '6': 6, '7': 7, '8': 8, '9': 9, '10': 10}
+
+data_chemo['Cancer Type Detailed'] = data_chemo['Cancer Type Detailed'].map(tumor_type_mapping)
+data_chemo['Integrative Cluster'] = data_chemo['Integrative Cluster'].map(cluster_mapping)
+
+# histogram of all compared to those that received chemotherapy ---------------
+chemo = data_chemo[data_chemo['Chemotherapy'] == 1]
+no_chemo = data_chemo[data_chemo['Chemotherapy'] == 0]
+
+plt.hist(data_chemo['Age at Diagnosis'], bins=20, alpha=0.5, label='all')
+plt.hist(chemo['Age at Diagnosis'], bins=20, alpha=0.5, label='chemotherapy')
+plt.xlabel('Age at Diagnosis [years]')
+plt.ylabel('Number of Patients')
+plt.legend()
+plt.show()
+
+# simple logistic regression - with Age at Diagnosis --------------------------
+
+# splitting into training and test set and
+# defining the dependent and independent variables
+X_train, X_test, y_train, y_test = train_test_split(data_chemo[['Age at Diagnosis']],
+                                                    data_chemo[['Chemotherapy']], test_size=0.25, random_state=42)
+# print(X_train.shape)  # (966, 1)
+# print(y_train.shape)  # (966, 1)
+# print(X_test.shape)  # (323, 1)
+# print(y_test.shape)  # (323, 1)
+
+# building the model and fitting the data
+log_reg = sm.Logit(y_train, X_train).fit()
+print(log_reg.summary())
+
+# performing predictions on the test dataset
+pred = log_reg.predict(X_test)
+prediction = list(map(round, pred))
+
+# comparing original and predicted values of y
+print('Actual values', list(y_test.values))
+print('Predictions :', prediction)
+
+# confusion matrix
+cm = confusion_matrix(y_test, prediction)
+print("Confusion Matrix : \n", cm)
+
+# accuracy score
+print('Test accuracy = ', accuracy_score(y_test, prediction))
+
+# F1-score
+f_score = f1_score(y_test, prediction)
+print("F1 score : \n", f_score)
+
+
+# multiple logistic regression - including more variables ---------------------
+
+features = ['Age at Diagnosis', 'ER Status', 'Neoplasm Histologic Grade',
+                'HER2 Status', 'Lymph nodes examined positive', 'Mutation Count',
+                'PR Status', 'Tumor Size', 'Tumor Stage', 'Cancer Type Detailed',
+                'Integrative Cluster']
+
+# splitting into training and test set and
+# defining the dependent and independent variables
+X_train, X_test, y_train, y_test = train_test_split(
+    data_chemo[features],
+    data_chemo[['Chemotherapy']], test_size=0.25, random_state=42)
+
+# building the model and fitting the data
+log_reg = sm.Logit(y_train, X_train).fit()
+print(log_reg.summary())
+
+# correcting for multiple testing
+reject, adjusted_p_values, _, _ = multipletests(log_reg.pvalues, method='bonferroni')
+df = pd.DataFrame({'variable': features,
+                    'p_adjusted': adjusted_p_values,
+                    'significant': reject})
+print(df)
+
+# performing predictions on the test dataset
+pred = log_reg.predict(X_test)
+prediction = list(map(round, pred))
+
+# comparing original and predicted values of y
+print('Actual values', list(y_test.values))
+print('Predictions :', prediction)
+
+# confusion matrix
+cm = confusion_matrix(y_test, prediction)
+print("Confusion Matrix : \n", cm)
+
+# accuracy score
+print('Test accuracy = ', accuracy_score(y_test, prediction))
+
+# F1-score
+f_score = f1_score(y_test, prediction)
+print("F1 score : \n", f_score)
+
