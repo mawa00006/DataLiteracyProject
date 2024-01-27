@@ -4,13 +4,12 @@ import matplotlib.pyplot as plt
 import scipy.stats as stats
 from scipy.stats import pearsonr
 from scipy.stats import spearmanr
-from data_reader import read_and_preprocess
+from src.data_preprocessing import read_and_preprocess
 from scipy.stats import f_oneway
 from scipy.stats import ttest_ind
 
-### read the data ------------------------------
-file_name = "../dat/brca_metabric_clinical_data.tsv"
-data = read_and_preprocess(file_name)
+# Read the data
+data = pd.read_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
 
 ### inspect the data ------------------------------
 

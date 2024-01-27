@@ -2,12 +2,11 @@ import numpy as np
 import seaborn as sns
 import statsmodels.api as sm
 from matplotlib import pyplot as plt
-from data_reader import read_and_preprocess
+from src.data_preprocessing import read_and_preprocess
 
 
-### read the data ------------------------------
-file_name = "../dat/brca_metabric_clinical_data.tsv"
-data = read_and_preprocess(file_name)
+# Read the data
+data = pd.read_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
 
 ### Age vs Therapy ------------------------------
 

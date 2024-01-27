@@ -7,7 +7,9 @@ import numpy as np
 import statsmodels.api as sm
 
 # Read the TSV file into a DataFrame
+# TODO: Why is this the old dataset?
 df = pd.read_csv('brca_metabric_clinical_data.tsv', sep='\t')
+
 
 # Display the first few rows of the DataFrame
 

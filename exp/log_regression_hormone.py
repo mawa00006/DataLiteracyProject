@@ -2,14 +2,13 @@ import pandas as pd
 import statsmodels.api as sm
 from statsmodels.stats.multitest import multipletests
 from matplotlib import pyplot as plt
-from data_reader import read_and_preprocess
+from src.data_preprocessing import read_and_preprocess
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (confusion_matrix, accuracy_score)
 from sklearn.metrics import f1_score
 
-# read the data --------------------------------------------------------------------------------------------
-file_name = "/Users/friederikemoroff/Documents/university/bioinformatic/data_literacy/breast_cancer/clinical_data.tsv"
-data = read_and_preprocess(file_name)
+# Read the data
+data = pd.read_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
 
 
 # Hormone Therapy ------------------------------------------------------------------------------------------

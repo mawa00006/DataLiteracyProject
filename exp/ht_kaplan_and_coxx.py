@@ -1,14 +1,10 @@
-from data_reader import read_and_preprocess
-import pandas as pd
-from lifelines import KaplanMeierFitter
+from src.data_preprocessing import read_and_preprocess
 import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 from lifelines import CoxPHFitter
 
 
-#fetch data frame
-df=read_and_preprocess('brca_metabric_clinical_data.tsv')
+# Read the data
+df = pd.read_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
 df = df.dropna(subset=['Age at Diagnosis', 'Overall Survival (Months)', 'Overall Survival Status', 'Chemotherapy', 'Nottingham prognostic index','Relapse Free Status (Months)', 'Relapse Free Status','Radio Therapy'])
 #filter for age
 #df = df[df['Age at Diagnosis'] >= 70]
