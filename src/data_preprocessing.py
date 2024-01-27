@@ -23,8 +23,10 @@ def read_and_preprocess(data_path: str) -> pd.DataFrame:
     exclude_col = ['Cancer Type', 'Study ID', 'Sample ID', 'Number of Samples Per Patient', 'Sample Type', 'Sex']
     data = data.loc[:, ~data.columns.isin(exclude_col)]
 
-    # Drop NAs for Age as this is our primary variable of interest
-    data = data.dropna(subset=['Age at Diagnosis'])
+    # Drop NAs for relevant variables
+    data = data.dropna(subset=['Age at Diagnosis', 'Chemotherapy', 'Tumor Size', 'Tumor Stage',
+                                 'Neoplasm Histologic Grade', 'Lymph nodes examined positive',
+                                 'Mutation Count', 'Integrative Cluster'])
 
     # Exclude samples with unspecific cancer type labeling
     data = data[~data['Cancer Type Detailed'].isin(["Breast"])]
@@ -36,6 +38,21 @@ def read_and_preprocess(data_path: str) -> pd.DataFrame:
     data['Radio Therapy Binary'] = (data['Radio Therapy'] == 'YES').astype(int)
     data['ER Status Binary'] = (data['ER Status'] == 'Positive').astype(int)
 
+    # convert categorical to dummy numerical variable
+    tumor_type_mapping = {'Breast Invasive Ductal Carcinoma': 0,
+                          'Breast Mixed Ductal and Lobular Carcinoma': 1,
+                          'Breast Invasive Lobular Carcinoma': 2,
+                          'Invasive Breast Carcinoma': 3,
+                          'Breast Invasive Mixed Mucinous Carcinoma': 4,
+                          'Breast Angiosarcoma': 5,
+                          'Metaplastic Breast Cancer': 6}
+
+    cluster_mapping = {'1': 0, '2': 1, '3': 2, '4ER+': 3, '4ER-': 4, '5': 5,
+                       '6': 6, '7': 7, '8': 8, '9': 9, '10': 10}
+
+    data['Cancer Type Detailed Encoded'] = data['Cancer Type Detailed'].map(tumor_type_mapping)
+    data['Integrative Cluster Encoded'] = data['Integrative Cluster'].map(cluster_mapping)
+
     return data
 
 
@@ -45,3 +62,4 @@ if __name__ == "__main__":
 
     # Save preprocessed data
     metabric.to_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
+
