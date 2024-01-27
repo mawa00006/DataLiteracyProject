@@ -44,4 +44,4 @@ if __name__ == "__main__":
     metabric = read_and_preprocess(file_name)
 
     # Save preprocessed data
-    metabric.to_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv")
+    metabric.to_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
