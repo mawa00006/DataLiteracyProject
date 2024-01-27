@@ -1,13 +1,17 @@
-from src.data_preprocessing import read_and_preprocess
+from data_reader import read_and_preprocess
+import pandas as pd
+from lifelines import KaplanMeierFitter
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
 from lifelines import CoxPHFitter
 
 
-# Read the data
-df = pd.read_csv("../dat/preprocessed_brca_metabric_clinical_data.tsv", sep='\t')
+#fetch data frame
+df=read_and_preprocess('brca_metabric_clinical_data.tsv')
 df = df.dropna(subset=['Age at Diagnosis', 'Overall Survival (Months)', 'Overall Survival Status', 'Chemotherapy', 'Nottingham prognostic index','Relapse Free Status (Months)', 'Relapse Free Status','Radio Therapy'])
 #filter for age
-#df = df[df['Age at Diagnosis'] >= 70]
+df = df[df['Age at Diagnosis'] >= 70]
 #filter for cancer type
 #df = df[df['Cancer Type Detailed'] == 'Breast Invasive Lobular Carcinoma']
 
@@ -39,10 +43,14 @@ plt.show()'''
 df['Overall Survival Status'] = df['Overall Survival Status'].map({'0:LIVING': 0, '1:DECEASED': 1})
 df['Relapse Free Status'] = df['Relapse Free Status'].map({'0:Not Recurred': 0, '1:Recurred': 1})
 
-# Filter the dataset for patients with a score greater than 4 in Nottingham prognostic index
-#df =  df[(df['Nottingham prognostic index'] > 4) & (df['Nottingham prognostic index'] < 5.5)]
+
 # Filter the dataset for wanted features 
-'''cox_data = df[['Age at Diagnosis', 'Nottingham prognostic index', 'Chemotherapy', 'Overall Survival (Months)', 'Overall Survival Status','Radio Therapy']]
+#df = df[df['Type of Breast Surgery'] == 1]
+positive_pr_er_df = df[(df['PR Status'] == 'Positive') & (df['ER Status'] == 'Positive')]
+low_risk = df[df['Nottingham prognostic index'] <= 3.4]
+medium_risk = df[(df['Nottingham prognostic index'] > 3.4) & (df['Nottingham prognostic index'] <= 5)]
+high_risk = df[df['Nottingham prognostic index'] > 5]
+cox_data = high_risk[['Age at Diagnosis',   'Overall Survival (Months)', 'Overall Survival Status','Radio Therapy','Hormone Therapy','Type of Breast Surgery']]
 
 # Fit Cox Proportional Hazard model
 cph = CoxPHFitter()
@@ -54,11 +62,14 @@ print(cph.summary)
 # Plot the coefficients
 cph.plot()
 plt.title('Cox Proportional Hazard Model Coefficients')
-plt.show()'''
+plt.show()
 
-#cox for replapse
-cox_data = df[['Age at Diagnosis', 'Nottingham prognostic index', 'Chemotherapy', 'Relapse Free Status (Months)', 'Relapse Free Status','Radio Therapy']]
+'''#cox for replapse
 
+low_risk = df[df['Nottingham prognostic index'] <= 3.4]
+medium_risk = df[(df['Nottingham prognostic index'] > 3.4) & (df['Nottingham prognostic index'] <= 5)]
+high_risk = df[df['Nottingham prognostic index'] > 5]
+cox_data = low_risk[['Age at Diagnosis', 'Nottingham prognostic index', 'Chemotherapy', 'Relapse Free Status (Months)', 'Relapse Free Status','Radio Therapy','Hormone Therapy','Type of Breast Surgery']]
 # Fit Cox Proportional Hazard model
 cph = CoxPHFitter()
 cph.fit(cox_data, duration_col='Relapse Free Status (Months)', event_col='Relapse Free Status')
@@ -69,4 +80,4 @@ print(cph.summary)
 # Plot the coefficients
 cph.plot()
 plt.title('Cox Proportional Hazard Model Coefficients')
-plt.show()
+plt.show()'''
