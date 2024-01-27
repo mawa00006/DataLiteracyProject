@@ -1,0 +1,9 @@
+pandas
+numpy
+seaborn
+matplotlib
+statsmodels
+scipy
+scikit-learn
+lifelines
+tueplots
