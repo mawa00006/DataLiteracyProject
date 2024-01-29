@@ -2,10 +2,8 @@ import pandas as pd
 import statsmodels.api as sm
 
 from statsmodels.stats.multitest import multipletests
-from src.data_preprocessing import read_and_preprocess
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score, roc_curve, auc
-from sklearn.metrics import f1_score as F1_score
 
 from matplotlib import pyplot as plt
 
@@ -18,7 +16,11 @@ def LogisticRegression(data: pd.DataFrame, dep_variable: str, indep_variables: l
     :param indep_variables: List with at least one name of an independent variable
     :param show_summary: Default: False. Boolean values indication whether to print the model summary or not.
     :return:
-
+    p_values
+    test_accuracy
+    roc_auc
+    conf_matrix
+    pseudo_R_squared
     """
     # splitting into training and test set and
     X_train, X_test, Y_train, Y_test = train_test_split(data[indep_variables],
