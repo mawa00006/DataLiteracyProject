@@ -4,7 +4,8 @@ from lifelines.statistics import logrank_test
 
 def LogRankTest(df: pd.DataFrame, tumor_stage: int, variable: str) -> [float, float]:
     """
-    Performs a logrank test on between age groups <50 and >=50 for a given tumor stage for relapse free status or survival status.
+    Performs a logrank test between age groups <50 and >=50 for a given tumor stage for relapse free status or
+    survival status.
 
     :param df: A pandas Dataframe.
     :param tumor_stage: An integer between 1-4 indicating the tumor stage of interest .
