@@ -4,7 +4,7 @@ import statsmodels.api as sm
 from statsmodels.stats.multitest import multipletests
 from src.data_preprocessing import read_and_preprocess
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score, roc_curve, auc
 from sklearn.metrics import f1_score as F1_score
 
 from matplotlib import pyplot as plt
@@ -51,7 +51,8 @@ def LogisticRegression(data: pd.DataFrame, dep_variable: str, indep_variables: l
     # accuracy score
     test_accuracy = accuracy_score(Y_test, predictions)
 
-    # F1-score
-    f1_score = F1_score(Y_test, predictions)
+    # ROC AUC
+    fpr, tpr, thresholds = roc_curve(Y_test, predictions)
+    roc_auc = auc(fpr, tpr)
 
-    return p_values, round(test_accuracy, 2), round(f1_score, 2), conf_matrix, round(pseudo_R_squared, 3)
+    return p_values, round(test_accuracy, 2), round(roc_auc, 2), conf_matrix, round(pseudo_R_squared, 3)
