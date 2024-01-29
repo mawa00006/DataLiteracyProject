@@ -37,6 +37,8 @@ def read_and_preprocess(data_path: str) -> pd.DataFrame:
     data['Hormone Therapy Binary'] = (data['Hormone Therapy'] == 'YES').astype(int)
     data['Radio Therapy Binary'] = (data['Radio Therapy'] == 'YES').astype(int)
     data['ER Status Binary'] = (data['ER Status'] == 'Positive').astype(int)
+    data['HER2 Status Binary'] = (data['HER2 Status'] == 'Positive').astype(int)
+    data['PR Status Binary'] = (data['PR Status'] == 'Positive').astype(int)
 
     # convert categorical to dummy numerical variable
     tumor_type_mapping = {'Breast Invasive Ductal Carcinoma': 0,
