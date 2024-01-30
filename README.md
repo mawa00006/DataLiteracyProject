@@ -1,6 +1,6 @@
 # DataLiteracyProject
 
-TODO: Project Description
+Project for the “Data Literacy” course at the University of Tübingen, Winter 2023/24 (Module ML4201).
 
 ---
 
@@ -27,5 +27,6 @@ pip install -r requirements.txt
 --- 
 
 ## How to reproduce our results
-## Credits
-## License
+To reproduce the results of our analysis go to the scr folder and run the corresponding notebooks.
+
+To reproduce our plots go to doc/fig and run the corresponding notebooks.
