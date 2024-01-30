@@ -14,11 +14,11 @@ cd DataLiteracyProject
 ### Create a conda environment and install all necessary dependencies
 ````shell
 # create a conda environment with python 3.9 and ipykernel
-conda create -n ProjectName python=3.9 ipykernel ipywidgets=7
-conda activate ProjectName
+conda create -n brca python=3.9 ipykernel ipywidgets=7
+conda activate brca
 
 # install ipython kernel
-ipython kernel install --user --name=ProjectName
+ipython kernel install --user --name=brca
 
 # install requirements
 pip install -r requirements.txt
